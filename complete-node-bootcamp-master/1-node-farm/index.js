@@ -50,6 +50,11 @@ fs.writeFileSync('./starter/txt/output.txt', textAdded);
 
 /////////////////////////   SERVER  responses on various requests using 'url' . 
 
+const data = fs.readFileSync(`${__dirname}/starter/dev-data/data.json`, 'utf-8');    // reading the data once 
+// const dataObj =  JSON.parse(data);
+
+
+
 const server = http.createServer((Request, Response)=>{
    // console.log(Request.url);
    const pathName = Request.url;
@@ -60,6 +65,22 @@ const server = http.createServer((Request, Response)=>{
    
    else if(pathName === '/product'){
     Response.end("Hello Prashant This is Product response from the server !!!");
+   }
+   
+   else if(pathName === '/api'){
+//
+//  here the readfile is reading the file everytime api hits, not good practise.
+
+//    fs.readFile(`${__dirname}/starter/dev-data/data.json`, 'utf-8', (err, data)=>{
+//       const productData =  JSON.parse(data);
+//       //console.log(productData);
+
+      Response.writeHead(200, {'Content-type' : 'application/json'});
+
+      Response.end(data);
+
+   //});
+   
    }
 
    else{
