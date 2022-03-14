@@ -51,7 +51,7 @@ fs.writeFileSync('./starter/txt/output.txt', textAdded);
 /////////////////////////   SERVER  responses on various requests using 'url' . 
 
 const data = fs.readFileSync(`${__dirname}/starter/dev-data/data.json`, 'utf-8');    // reading the data once 
-// const dataObj =  JSON.parse(data);
+const dataObj =  JSON.parse(data);
 
 
 
