@@ -48,9 +48,28 @@ fs.writeFileSync('./starter/txt/output.txt', textAdded);
 // console.log("async function reading data..");   // this line will first execute
 
 
-/////////////////////////   SERVER  responses on various requests using 'url' . 
+/////////////////////////   SERVER  responses on various requests using 'url'
 
-const data = fs.readFileSync(`${__dirname}/starter/dev-data/data.json`, 'utf-8');    // reading the data once 
+const replaceTemplate = (temp, product)=>{
+   let output = temp.replace(/{%PRODUCTNAME%}/g, product.productName);
+   output = output.replace(/{%IMAGE%}/g, product.image);
+   output = output.replace(/{%PRICE%}/g, product.price);
+   output = output.replace(/{%FROM%}/g, product.from);
+   output = output.replace(/{%NUTRIENTS%}/g, product.nutrients);
+   output = output.replace(/{%QUANTITY%}/g, product.quantity);
+   output = output.replace(/{%DESCRIPTION%}/g, product.description);
+   output = output.replace(/{%ID%}/g, product.id);
+   
+   if(!product.organic) output = output.replace(/{%NOT_ORGANIC%}/g, 'not-organic');
+   return output;
+
+};
+
+const tempOverview = fs.readFileSync(`${__dirname}/starter/templates/template-overview.html`, 'utf-8'); // reading temp-overview html for once.
+const tempCard = fs.readFileSync(`${__dirname}/starter/templates/template-card.html`, 'utf-8');
+const tempProduct = fs.readFileSync(`${__dirname}/starter/templates/template-product.html`, 'utf-8');
+
+const data = fs.readFileSync(`${__dirname}/starter/dev-data/data.json`, 'utf-8');    // reading the FILE DATA Only once.
 const dataObj =  JSON.parse(data);
 
 
@@ -59,16 +78,26 @@ const server = http.createServer((Request, Response)=>{
    // console.log(Request.url);
    const pathName = Request.url;
    
-   if(pathName === '/' || pathName === '/overview'){
-    Response.end("Hello Prashant this is OVERVIEWS response from the server !!!");
+  // Overview page
+  if(pathName === '/' || pathName === '/overview'){
+
+   Response.writeHead(200, {'Content-type' : 'text/html'});
+
+   const cardsHtml = dataObj.map(ele => replaceTemplate(tempCard, ele)).join('');
+   const output = tempOverview.replace('{%PRODUCT_CARDS%}', cardsHtml);
+   //console.log(output);
+   Response.end(output);
+   //Response.end("Hello Prashant this is OVERVIEWS response from the server !!!");
    } 
-   
+
+   // Product page 
    else if(pathName === '/product'){
     Response.end("Hello Prashant This is Product response from the server !!!");
    }
    
+   // API 
    else if(pathName === '/api'){
-//
+
 //  here the readfile is reading the file everytime api hits, not good practise.
 
 //    fs.readFile(`${__dirname}/starter/dev-data/data.json`, 'utf-8', (err, data)=>{
@@ -82,7 +111,8 @@ const server = http.createServer((Request, Response)=>{
    //});
    
    }
-
+  
+   // NOT FOUND 
    else{
     Response.writeHead(404, {
        'Content-type' : 'text/html',
