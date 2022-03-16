@@ -75,14 +75,14 @@ const dataObj =  JSON.parse(data);
 
 
 const server = http.createServer((Request, Response)=>{
-   // console.log(Request.url);
-   const pathName = Request.url;
+   //console.log(Request.url);
+   const { query, pathname } = url.parse(Request.url, true);  // by parse converting the url into object and taking 2 values from it.
+  
    
   // Overview page
-  if(pathName === '/' || pathName === '/overview'){
+  if(pathname === '/' || pathname === '/overview'){
 
    Response.writeHead(200, {'Content-type' : 'text/html'});
-
    const cardsHtml = dataObj.map(ele => replaceTemplate(tempCard, ele)).join('');
    const output = tempOverview.replace('{%PRODUCT_CARDS%}', cardsHtml);
    //console.log(output);
@@ -91,12 +91,16 @@ const server = http.createServer((Request, Response)=>{
    } 
 
    // Product page 
-   else if(pathName === '/product'){
-    Response.end("Hello Prashant This is Product response from the server !!!");
+   else if(pathname === '/product'){
+   //console.log(query);
+   Response.writeHead(200, {'Content-type' : 'text/html'});
+   const product = dataObj[query.id];    // getting the requested url product from the dataObj. 
+   const output = replaceTemplate(tempProduct, product);
+   Response.end(output);
    }
    
    // API 
-   else if(pathName === '/api'){
+   else if(pathname === '/api'){
 
 //  here the readfile is reading the file everytime api hits, not good practise.
 
