@@ -22,8 +22,50 @@ const writefilePro = (file, data) => {
   });
 };
 
-// calling readfile
+// doing same task with async/await promises.
 
+const getDogPic = async () => {
+  try {
+    // this will read the file and give the data
+
+    const data = await readFile(`${__dirname}/dog.txt`);
+    console.log(`Breed : ${data}`);
+
+    // this promise will give the image link of that particular dog mentioned the the file
+
+    const res = await superagent.get(
+      `https://dog.ceo/api/breed/${data}/images/random`
+    );
+    console.log(res.body.message);
+
+    // this will store the dog image in dog-img.txt
+
+    await writefilePro('dog-img.txt', res.body.message);
+    console.log('random dog image saved to file');
+  } catch (err) {
+    console.error(err);
+
+    throw err;
+  }
+
+  return '2: dog pics';
+};
+
+// trying to understand the async nature with the console
+
+console.log('1: will get dog pic');
+
+getDogPic()
+  .then((x) => {
+    console.log(x);
+    console.log('3: Done getting dog pics!');
+  })
+  .catch((err) => {
+    console.log('ERROR');
+  });
+
+// calling readfile
+/*
 readFile(`${__dirname}/dog.txt`)
   .then((data) => {
     console.log(`Breed : ${data}`);
@@ -41,6 +83,8 @@ readFile(`${__dirname}/dog.txt`)
   .catch((err) => {
     console.error(err.message);
   });
+
+*/
 
 // now reading the data async in the file system
 
