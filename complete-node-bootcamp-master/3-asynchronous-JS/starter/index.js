@@ -33,14 +33,33 @@ const getDogPic = async () => {
 
     // this promise will give the image link of that particular dog mentioned the the file
 
-    const res = await superagent.get(
+    // const res = await superagent.get(
+    //   `https://dog.ceo/api/breed/${data}/images/random`
+    // );
+
+    // this is multiple pending promise object.
+
+    const res1promise = superagent.get(
       `https://dog.ceo/api/breed/${data}/images/random`
     );
-    console.log(res.body.message);
+
+    const res2promise = superagent.get(
+      `https://dog.ceo/api/breed/${data}/images/random`
+    );
+
+    const res3promise = superagent.get(
+      `https://dog.ceo/api/breed/${data}/images/random`
+    );
+
+    const all = await Promise.all([res1promise, res2promise, res3promise]);
+    const imgs = all.map((el) => el.body.message);
+    console.log(imgs);
+
+    //console.log(res.body.message);
 
     // this will store the dog image in dog-img.txt
 
-    await writefilePro('dog-img.txt', res.body.message);
+    await writefilePro('dog-img.txt', imgs.join('\n'));
     console.log('random dog image saved to file');
   } catch (err) {
     console.error(err);
@@ -51,18 +70,29 @@ const getDogPic = async () => {
   return '2: dog pics';
 };
 
-// trying to understand the async nature with the console
-
-console.log('1: will get dog pic');
-
-getDogPic()
-  .then((x) => {
+(async () => {
+  try {
+    console.log('1: will get dog pic');
+    const x = await getDogPic();
     console.log(x);
     console.log('3: Done getting dog pics!');
-  })
-  .catch((err) => {
+  } catch (err) {
     console.log('ERROR');
-  });
+  }
+})();
+
+// trying to understand the async nature with the console
+
+// console.log('1: will get dog pic');
+
+// getDogPic()
+//   .then((x) => {
+//     console.log(x);
+//     console.log('3: Done getting dog pics!');
+//   })
+//   .catch((err) => {
+//     console.log('ERROR');
+//   });
 
 // calling readfile
 /*
