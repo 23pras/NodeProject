@@ -39,6 +39,34 @@ app.get('/api/v1/tours', (req, res) => {
   });
 });
 
+// creating a get api for particular id, means details for one tour.
+
+app.get('/api/v1/tours/:id', (req, res) => {
+  console.log(req.params);
+
+  // converting the string(id) into number (id)
+  const id = req.params.id * 1;
+
+  // checking if user enters the valid id
+
+  if (id > tours.length) {
+    return res.status(404).json({
+      status: 'fail',
+      message: 'Invalid ID',
+    });
+  }
+
+  // finding the requested id from the tours array
+  const tour = tours.find((ele) => ele.id === id);
+
+  res.status(200).json({
+    status: 'success',
+    data: {
+      tours: tour,
+    },
+  });
+});
+
 // creating a post api which post data of new tour received by that api request.
 
 app.post('/api/v1/tours', (req, res) => {
