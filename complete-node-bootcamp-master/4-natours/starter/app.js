@@ -3,6 +3,10 @@ const express = require('express');
 
 const app = express();
 
+// middleware for app.post, express.json is middleware
+
+app.use(express.json());
+
 // this will bring some data
 
 // app.get('/', (req, res) => {
@@ -25,7 +29,7 @@ const tours = JSON.parse(
 
 // creating a get api which takes data from tours and sends whenever the particular api is hit.
 
-app.get('/api/v1/tours/', (req, res) => {
+app.get('/api/v1/tours', (req, res) => {
   res.status(200).json({
     status: 'success',
     results: tours.length,
@@ -33,6 +37,38 @@ app.get('/api/v1/tours/', (req, res) => {
       tours,
     },
   });
+});
+
+// creating a post api which post data of new tour received by that api request.
+
+app.post('/api/v1/tours', (req, res) => {
+  //console.log(req.body);
+  // creating the new id for requested object.
+
+  const newid = tours[tours.length - 1].id + 1;
+
+  // creating new object related to that id.
+
+  const newtour = Object.assign({ id: newid }, req.body);
+
+  // now pushing that object of newtour to the tours which is array of objects (all tours).
+
+  tours.push(newtour);
+
+  // here we are saving the new tours list into our tours-simple.json file .
+
+  fs.writeFile(
+    `${__dirname}/dev-data/data/tours-simple.json`,
+    JSON.stringify(tours),
+    (error) => {
+      res.status(201).json({
+        status: 'success',
+        data: {
+          tour: newtour,
+        },
+      });
+    }
+  );
 });
 
 const port = 3000;
