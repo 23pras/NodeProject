@@ -7,20 +7,6 @@ const app = express();
 
 app.use(express.json());
 
-// this will bring some data
-
-// app.get('/', (req, res) => {
-//   res
-//     .status(200)
-//     .json({ message: 'Hello from the server side', app: 'Natours' });
-// });
-
-// // this will send and post the data to that url
-
-// app.post('/', (req, res) => {
-//   res.send('you can post to the end points...');
-// });
-
 // we are writing read file function outside the app.get coz the top level code is executed only once and can be used later.
 
 const tours = JSON.parse(
@@ -29,7 +15,7 @@ const tours = JSON.parse(
 
 // creating a get api which takes data from tours and sends whenever the particular api is hit.
 
-app.get('/api/v1/tours', (req, res) => {
+const getAllTours = (req, res) => {
   res.status(200).json({
     status: 'success',
     results: tours.length,
@@ -37,11 +23,9 @@ app.get('/api/v1/tours', (req, res) => {
       tours,
     },
   });
-});
+}
 
-// creating a get api for particular id, means details for one tour.
-
-app.get('/api/v1/tours/:id', (req, res) => {
+const getTour = (req, res) => {
   console.log(req.params);
 
   // converting the string(id) into number (id)
@@ -65,11 +49,9 @@ app.get('/api/v1/tours/:id', (req, res) => {
       tours: tour,
     },
   });
-});
+}
 
-// creating a post api which post data of new tour received by that api request.
-
-app.post('/api/v1/tours', (req, res) => {
+const createTour = (req, res) => {
   //console.log(req.body);
   // creating the new id for requested object.
 
@@ -97,11 +79,9 @@ app.post('/api/v1/tours', (req, res) => {
       });
     }
   );
-});
+}
 
-// creating a patch api to edit the data
-
-app.patch('/api/v1/tours/:id', (req, res) => {
+const updateTour = (req, res) => {
   const id = req.params.id * 1;
   if (id > tours.length) {
     return res.status(404).json({
@@ -114,11 +94,9 @@ app.patch('/api/v1/tours/:id', (req, res) => {
     status: 'success',
     tours: '<Updated Tour here ...>',
   });
-});
+}
 
-// creating a api to delete the data of some req id
-
-app.delete('/api/v1/tours/:id', (req, res) => {
+const deleteTour = (req, res) => {
   const id = req.params.id * 1;
   if (id > tours.length) {
     return res.status(404).json({
@@ -131,7 +109,31 @@ app.delete('/api/v1/tours/:id', (req, res) => {
     status: 'success',
     data: null,
   });
-});
+}
+
+// creating a get api which takes data from tours and sends whenever the particular api is hit.
+
+// app.get('/api/v1/tours', getAllTours);
+
+// creating a get api for particular id, means details for one tour.
+
+// app.get('/api/v1/tours/:id', getTour);
+
+// creating a post api which post data of new tour received by that api request.
+
+// app.post('/api/v1/tours', createTour);
+
+// creating a patch api to edit the data
+
+// app.patch('/api/v1/tours/:id', updateTour);
+
+// creating a api to delete the data of some req id
+
+// app.delete('/api/v1/tours/:id', deleteTour);
+
+app.route('/api/v1/tours').get(getAllTours).post(createTour);
+
+app.route('/api/v1/tours/:id').get(getTour).patch(updateTour).delete(deleteTour);
 
 const port = 3000;
 
