@@ -5,8 +5,19 @@ const app = express();
 
 // middleware for app.post, express.json is middleware
 
-app.use(express.json());
+// app.use(express.json());
 
+// creating our own middleware
+
+app.use((req,res,next) =>{
+  console.log("My Own Middleware !!!");
+  next();
+});
+
+app.use((req, res, next) =>{
+  req.requestTime = new Date().toISOString();
+  next();
+})
 // we are writing read file function outside the app.get coz the top level code is executed only once and can be used later.
 
 const tours = JSON.parse(
@@ -16,8 +27,10 @@ const tours = JSON.parse(
 // creating a get api which takes data from tours and sends whenever the particular api is hit.
 
 const getAllTours = (req, res) => {
+  console.log(req.requestTime)
   res.status(200).json({
     status: 'success',
+    requestedAt : req.requestTime,
     results: tours.length,
     data: {
       tours,
