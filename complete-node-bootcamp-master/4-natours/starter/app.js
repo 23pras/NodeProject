@@ -1,13 +1,18 @@
 const fs = require('fs');
 const express = require('express');
+const morgan = require('morgan');
 
 const app = express();
+
+
 
 // middleware for app.post, express.json is middleware
 
 // app.use(express.json());
 
 // creating our own middleware
+
+app.use(morgan('dev'));     // This is 3rd party middleware
 
 app.use((req,res,next) =>{
   console.log("My Own Middleware !!!");
@@ -25,6 +30,7 @@ const tours = JSON.parse(
 );
 
 // creating a get api which takes data from tours and sends whenever the particular api is hit.
+// Route handlers. 1)
 
 const getAllTours = (req, res) => {
   console.log(req.requestTime)
@@ -38,6 +44,7 @@ const getAllTours = (req, res) => {
   });
 }
 
+// 2)
 const getTour = (req, res) => {
   console.log(req.params);
 
@@ -63,6 +70,7 @@ const getTour = (req, res) => {
     },
   });
 }
+// 3)
 
 const createTour = (req, res) => {
   //console.log(req.body);
@@ -94,6 +102,8 @@ const createTour = (req, res) => {
   );
 }
 
+// 4)  
+
 const updateTour = (req, res) => {
   const id = req.params.id * 1;
   if (id > tours.length) {
@@ -109,6 +119,8 @@ const updateTour = (req, res) => {
   });
 }
 
+// 5)
+
 const deleteTour = (req, res) => {
   const id = req.params.id * 1;
   if (id > tours.length) {
@@ -123,6 +135,43 @@ const deleteTour = (req, res) => {
     data: null,
   });
 }
+
+
+const getAllUsers = (req, res) => {
+    res.status(500).json({
+      status : 'Error',
+      message: 'This route is not yet defined !!'
+    })
+}
+
+const getUser = (req, res) => {
+  res.status(500).json({
+    status : 'Error',
+    message: 'This route is not yet defined !!'
+  })
+}
+
+const createUser = (req, res) => {
+  res.status(500).json({
+    status : 'Error',
+    message: 'This route is not yet defined !!'
+  })
+}
+
+const updateUser = (req, res) => {
+  res.status(500).json({
+    status : 'Error',
+    message: 'This route is not yet defined !!'
+  })
+}
+
+const deleteUser = (req, res) => {
+  res.status(500).json({
+    status : 'Error',
+    message: 'This route is not yet defined !!'
+  })
+}
+
 
 // creating a get api which takes data from tours and sends whenever the particular api is hit.
 
@@ -144,12 +193,19 @@ const deleteTour = (req, res) => {
 
 // app.delete('/api/v1/tours/:id', deleteTour);
 
+// All our routes               
+
 app.route('/api/v1/tours').get(getAllTours).post(createTour);
 
 app.route('/api/v1/tours/:id').get(getTour).patch(updateTour).delete(deleteTour);
 
-const port = 3000;
+app.route('/api/v1/users').get(getAllUsers).post(createUser);
 
+app.route('/api/v1/users/:id').get(getUser).patch(updateUser).delete(deleteUser);
+
+// Server starts
+
+const port = 3000;
 app.listen(port, () => {
   console.log(`App is running on port num ${port}... `);
 });
