@@ -193,15 +193,23 @@ const deleteUser = (req, res) => {
 
 // app.delete('/api/v1/tours/:id', deleteTour);
 
+
+const tourRouter = express.Router();
+const userRouter = express.Router();
+
 // All our routes               
 
-app.route('/api/v1/tours').get(getAllTours).post(createTour);
+tourRouter.route('/').get(getAllTours).post(createTour);
 
-app.route('/api/v1/tours/:id').get(getTour).patch(updateTour).delete(deleteTour);
+tourRouter.route('/:id').get(getTour).patch(updateTour).delete(deleteTour);
 
-app.route('/api/v1/users').get(getAllUsers).post(createUser);
+userRouter.route('/').get(getAllUsers).post(createUser);
 
-app.route('/api/v1/users/:id').get(getUser).patch(updateUser).delete(deleteUser);
+userRouter.route('/:id').get(getUser).patch(updateUser).delete(deleteUser);
+
+// Mounting the routers 
+app.use('/api/v1/tours',tourRouter);    // tourRouter is a middleware, used on route /api/v1/tours.
+app.use('/api/v1/users',userRouter);   //tourRouter is a middleware, used on route /api/v1/users, we are mounting the router on route.
 
 // Server starts
 
