@@ -9,6 +9,17 @@ const tours = JSON.parse(
 // creating a get api which takes data from tours and sends whenever the particular api is hit.
 // Route handlers. 1)
 
+exports.checkID = (req, res, next,value) => {
+  const id = req.params.id * 1;
+  if (id > tours.length) {
+    return res.status(404).json({
+      status: 'fail',
+      message: 'Invalid ID',
+    });
+  }
+  next();
+}
+
 exports.getAllTours = (req, res) => {
     console.log(req.requestTime)
     res.status(200).json({
@@ -30,12 +41,12 @@ exports.getTour = (req, res) => {
   
     // checking if user enters the valid id
   
-    if (id > tours.length) {
-      return res.status(404).json({
-        status: 'fail',
-        message: 'Invalid ID',
-      });
-    }
+    // if (id > tours.length) {
+    //   return res.status(404).json({
+    //     status: 'fail',
+    //     message: 'Invalid ID',
+    //   });
+    // }
   
     // finding the requested id from the tours array
     const tour = tours.find((ele) => ele.id === id);
@@ -81,15 +92,8 @@ exports.createTour = (req, res) => {
 // 4)  
   
 exports.updateTour = (req, res) => {
-    const id = req.params.id * 1;
-    if (id > tours.length) {
-      return res.status(404).json({
-        status: 'fail',
-        message: 'Invalid ID',
-      });
-    }
-  
-    res.status(200).json({
+
+      res.status(200).json({
       status: 'success',
       tours: '<Updated Tour here ...>',
     });
@@ -98,14 +102,7 @@ exports.updateTour = (req, res) => {
 // 5)
   
 exports.deleteTour = (req, res) => {
-    const id = req.params.id * 1;
-    if (id > tours.length) {
-      return res.status(404).json({
-        status: 'fail',
-        message: 'Invalid ID',
-      });
-    }
-  
+
     res.status(204).json({
       status: 'success',
       data: null,
