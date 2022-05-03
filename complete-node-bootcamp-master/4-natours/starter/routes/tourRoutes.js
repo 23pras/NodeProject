@@ -3,16 +3,23 @@ const fs = require('fs');
 
 // importing the handlers from tourController.
 
-const tourController = require('./../controllers/tourControllers');
+const tourController = require('../controllers/tourControllers');
 
 const router = express.Router();
 
-// param middleware 
+// param middleware.
 router.param('id', tourController.checkID);
 
-// chaining multiple middlewares functions 
-router.route('/').get(tourController.getAllTours).post(tourController.checkBody, tourController.createTour);
+// chaining multiple middlewares functions.
+router
+  .route('/')
+  .get(tourController.getAllTours)
+  .post(tourController.checkBody, tourController.createTour);
 
-router.route('/:id').get(tourController.getTour).patch(tourController.updateTour).delete(tourController.deleteTour);
+router
+  .route('/:id')
+  .get(tourController.getTour)
+  .patch(tourController.updateTour)
+  .delete(tourController.deleteTour);
 
 module.exports = router;
