@@ -36,7 +36,7 @@ const tourSchema = new mongoose.Schema({
   }
 });
 
-const Tour = mongoose.model('Tour');
+const Tour = mongoose.model('Tour', tourSchema);
 
 // Server starts
 const port = process.env.PORT || 3000;
