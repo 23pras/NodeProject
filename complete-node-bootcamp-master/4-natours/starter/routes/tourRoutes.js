@@ -8,13 +8,13 @@ const tourController = require('../controllers/tourControllers');
 const router = express.Router();
 
 // param middleware.
-router.param('id', tourController.checkID);
+// router.param('id', tourController.checkID);
 
 // chaining multiple middlewares functions.
 router
   .route('/')
   .get(tourController.getAllTours)
-  .post(tourController.checkBody, tourController.createTour);
+  .post(tourController.createTour);
 
 router
   .route('/:id')

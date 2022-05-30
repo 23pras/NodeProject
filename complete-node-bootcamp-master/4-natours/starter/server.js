@@ -20,35 +20,6 @@ mongoose.connect(DB, {
   console.log('DB connection established')  
 });
 
-const tourSchema = new mongoose.Schema({
-  name: {
-    type: String,
-    required: [true, "A tour must have name"],
-    unique: true
-  },
-  rating: {
-    type: Number,
-    default: 4.5
-  },
-  price: {
-    type: Number,
-    required: [true, "A tour must have Price"]
-  }
-});
-
-const Tour = mongoose.model('Tour', tourSchema);
-
-const testTour = new Tour({
-  name : "Prashant 23",
-  rating: 8.9,
-  price : 889
-});
-
-testTour.save().then(doc=>{
-  console.log(doc)
-}).catch(err=>{
-  console.log('Error :', err)
-});
 
 // Server starts
 const port = process.env.PORT || 3000;

@@ -1,44 +1,41 @@
 const fs = require('fs');
 
+const Tour = require('../models/tourModel');
 
-// we are writing read file function outside the app.get coz the top level code is executed only once and can be used later.
-const tours = JSON.parse(
-    fs.readFileSync(`${__dirname}/../dev-data/data/tours-simple.json`)
-  );
 
 // creating a get api which takes data from tours and sends whenever the particular api is hit.
 // Route handlers. 1)
 
-exports.checkID = (req, res, next,value) => {
-  const id = req.params.id * 1;
-  if (id > tours.length) {
-    return res.status(404).json({
-      status: 'fail',
-      message: 'Invalid ID',
-    });
-  }
-  next();
-}
+// exports.checkID = (req, res, next,value) => {
+//   const id = req.params.id * 1;
+//   if (id > tours.length) {
+//     return res.status(404).json({
+//       status: 'fail',
+//       message: 'Invalid ID',
+//     });
+//   }
+//   next();
+// }
 
-exports.checkBody = (req, res, next) => {
-  if(!req.body.name || !req.body.price) {
-    return res.status(400).json({
-      status: '',
-      message: 'Missing name or price'
-    });
-  }
-   next();
-}
+// exports.checkBody = (req, res, next) => {
+//   if(!req.body.name || !req.body.price) {
+//     return res.status(400).json({
+//       status: '',
+//       message: 'Missing name or price'
+//     });
+//   }
+//    next();s
+// }
 
 exports.getAllTours = (req, res) => {
     console.log(req.requestTime)
     res.status(200).json({
       status: 'success',
       requestedAt : req.requestTime,
-      results: tours.length,
-      data: {
-        tours,
-      },
+      // results: tours.length,
+      // data: {
+      //   tours,
+      // },
     });
 }
   
@@ -49,54 +46,26 @@ exports.getTour = (req, res) => {
     // converting the string(id) into number (id)
     const id = req.params.id * 1;
   
-    // checking if user enters the valid id
-  
-    // if (id > tours.length) {
-    //   return res.status(404).json({
-    //     status: 'fail',
-    //     message: 'Invalid ID',
-    //   });
-    // }
-  
     // finding the requested id from the tours array
-    const tour = tours.find((ele) => ele.id === id);
+    // const tour = tours.find((ele) => ele.id === id);
   
-    res.status(200).json({
-      status: 'success',
-      data: {
-        tours: tour,
-      },
-    });
+    // res.status(200).json({
+    //   status: 'success',
+    //   data: {
+    //     tours: tour,
+    //   },
+    // });
 }
 
 // 3)
 exports.createTour = (req, res) => {
-    // creating the new id for requested object.
-  
-    const newid = tours[tours.length - 1].id + 1;
-  
-    // creating new object related to that id.
-  
-    const newtour = Object.assign({ id: newid }, req.body);
-  
-    // now pushing that object of newtour to the tours which is array of objects (all tours).
-  
-    tours.push(newtour);
-  
-    // here we are saving the new tours list into our tours-simple.json file .
-  
-    fs.writeFile(
-      `${__dirname}/dev-data/data/tours-simple.json`,
-      JSON.stringify(tours),
-      (error) => {
-        res.status(201).json({
-          status: 'success',
-          data: {
-            tour: newtour,
-          },
-        });
-      }
-    );
+  res.status(201).json({
+    status: 'success',
+    // data: {
+    //   tour: newtour,
+    // },
+  });
+
 }
   
 // 4)  
