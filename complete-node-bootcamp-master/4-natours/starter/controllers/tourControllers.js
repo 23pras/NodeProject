@@ -27,19 +27,22 @@ const Tour = require('../models/tourModel');
 //    next();s
 // }
 
-exports.getAllTours = (req, res) => {
-    console.log(req.requestTime)
+// function to get all the tours
+exports.getAllTours = async (req, res) => {
+
+  const alltours = await Tour.find()
+
     res.status(200).json({
       status: 'success',
-      requestedAt : req.requestTime,
-      // results: tours.length,
-      // data: {
-      //   tours,
-      // },
+      results: alltours.length,
+      data: {
+        alltours,
+      },
     });
 }
   
-// 2)
+// 2) function to get a particular tour 
+
 exports.getTour = (req, res) => {
     console.log(req.params);
   
@@ -57,14 +60,26 @@ exports.getTour = (req, res) => {
     // });
 }
 
-// 3)
-exports.createTour = (req, res) => {
-  res.status(201).json({
-    status: 'success',
-    // data: {
-    //   tour: newtour,
-    // },
-  });
+// 3) To create a new Tour 
+exports.createTour = async(req, res) => {
+
+  try {
+    
+      const newTour = await Tour.create(req.body);
+
+      res.status(201).json({
+        status: 'Tour created successfully ! ',
+        data: {
+          tour: newTour,
+        },
+      });
+      
+  } catch (error) {
+    res.status(400).json({
+      status : 'Failed',
+      message : error
+    })
+  }
 
 }
   
