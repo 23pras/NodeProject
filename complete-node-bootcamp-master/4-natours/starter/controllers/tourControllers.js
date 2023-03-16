@@ -3,30 +3,6 @@ const fs = require('fs');
 const Tour = require('../models/tourModel');
 
 
-// creating a get api which takes data from tours and sends whenever the particular api is hit.
-// Route handlers. 1)
-
-// exports.checkID = (req, res, next,value) => {
-//   const id = req.params.id * 1;
-//   if (id > tours.length) {
-//     return res.status(404).json({
-//       status: 'fail',
-//       message: 'Invalid ID',
-//     });
-//   }
-//   next();
-// }
-
-// exports.checkBody = (req, res, next) => {
-//   if(!req.body.name || !req.body.price) {
-//     return res.status(400).json({
-//       status: '',
-//       message: 'Missing name or price'
-//     });
-//   }
-//    next();s
-// }
-
 // function to get all the tours
 exports.getAllTours = async (req, res) => {
 
@@ -94,21 +70,48 @@ exports.createTour = async(req, res) => {
   
 // 4)  
   
-exports.updateTour = (req, res) => {
+exports.updateTour = async(req, res) => {
+
+    try {
+      const updateTour = await Tour.findByIdAndUpdate(req.params.id, req.body, {
+        new : true,
+        runValidators: true
+      });
 
       res.status(200).json({
-      status: 'success',
-      tours: '<Updated Tour here ...>',
-    });
+        status: 'success',
+        data: {
+          tour: updateTour,
+        },
+      });
+
+    } catch (error) {
+      res.status(404).json({
+        status : 'Failed',
+        message : error
+      })
+    }
+
 }
   
 // 5)
   
-exports.deleteTour = (req, res) => {
+exports.deleteTour = async(req, res) => {
 
-    res.status(204).json({
-      status: 'success',
-      data: null,
-    });
+try {
+  await Tour.findByIdAndDelete(req.params.id);
+
+  res.status(200).json({
+    status: 'success, tour deleted',
+    data: {
+      tour: "Deleted ",
+    },
+  });
+} catch (error) {
+  res.status(404).json({
+    status : 'Failed',
+    message : error
+  })
+}
   }
   
