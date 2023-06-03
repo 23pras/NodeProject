@@ -2,6 +2,7 @@ const fs = require('fs');
 
 const Tour = require('../models/tourModel');
 const { json } = require('express');
+const { error } = require('console');
 
 
 // function to get all the tours
@@ -41,6 +42,22 @@ exports.getAllTours = async (req, res) => {
     }else{
       query = query.select('-__v');
     }
+
+ // Pagination
+
+ const page = req.query.page * 1 || 1;
+ 
+ const limit = req.query.limit * 1 || 100;
+
+ const skip = (page-1)* limit ;
+
+ query = query.skip(skip).limit(limit );
+
+ if(req.query.page){
+  const numTour =  await Tour.countDocuments();
+  if(skip >= numTour) throw new Error("This page doesn't exits");
+ }
+
 
  // executing
 
