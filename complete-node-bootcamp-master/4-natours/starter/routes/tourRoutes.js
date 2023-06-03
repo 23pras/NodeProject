@@ -11,6 +11,9 @@ const router = express.Router();
 // router.param('id', tourController.checkID);
 
 // chaining multiple middlewares functions.
+
+router.route('/top-5-cheap').get(tourController.aliasTopTour, tourController.getAllTours);
+
 router
   .route('/')
   .get(tourController.getAllTours)
