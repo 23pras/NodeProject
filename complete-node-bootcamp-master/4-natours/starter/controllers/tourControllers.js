@@ -192,6 +192,20 @@ exports.getMonthlyPlans = async(req,res)=>{
           numTourStarts : {$sum :1},
           Tours: {$push : '$name'}
         }
+      },
+      {
+        $addFields : { month : '$_id'}
+      },
+      {
+        $project : {
+          _id : 0
+        }
+      },
+      {
+        $sort : {numTourStarts : -1}
+      },
+      {
+        $limit : 12
       }
   ]);
 
