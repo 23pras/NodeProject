@@ -53,7 +53,11 @@ const tourSchema = new mongoose.Schema({
       default: Date.now(),
       select: false
     },
-    startDates : [Date]
+    startDates : [Date],
+    secretTour : {
+      type: Boolean,
+      default: false
+    }
   },
   {
     toJSON : { virtuals: true},
@@ -75,6 +79,28 @@ const tourSchema = new mongoose.Schema({
   //    console.log("line 75  >>>  ", doc);
   //    next();
   // });
+
+  //query middleware .
+
+  // tourSchema.pre('find', function(next){
+  tourSchema.pre(/^find/, function(next){
+    this.find({secretTour :{$ne : true}});
+    this.start = Date.now();
+     next();
+  });
+
+ tourSchema.post(/^find/, function(docs, next){
+  console.log( `query took ${Date.now() - this.start} milliseconds`);
+  next();
+ });
+
+ // Aggreatrion Middleware
+ 
+ tourSchema.pre('aggregate', function(next){
+   this.pipeline().unshift({ $match : { secretTour : {$ne : true}}})
+   console.log(" line 9999 >>>> ", this);
+   next();
+ });
 
   const Tour = mongoose.model('Tour', tourSchema);
 
